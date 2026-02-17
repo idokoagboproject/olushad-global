@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olushad Global Consulting — Intelligence Meets Innovation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #080e1a;
+    --deep: #0d1526;
+    --surface: #111c2e;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --teal: #1a8c7e;
+    --teal-light: #24b5a4;
+    --text: #e8e4dc;
+    --muted: #7a8499;
+    --border: rgba(201,168,76,0.15);
+    --border-subtle: rgba(255,255,255,0.06);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, opacity 0.2s;
+    opacity: 0.5;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Grid background */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(8,14,26,0.95), transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    border-color: var(--border-subtle);
+    background: rgba(8,14,26,0.97);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .logo span { color: var(--gold); }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 60% at 70% 50%, rgba(26,140,126,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 20% 80%, rgba(201,168,76,0.06) 0%, transparent 60%);
+  }
+
+  /* Animated geometric */
+  .geo-ring {
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 700px;
+    height: 700px;
+  }
+  .geo-ring circle {
+    fill: none;
+    stroke: rgba(201,168,76,0.1);
+  }
+  .geo-ring .inner { stroke: rgba(26,140,126,0.15); }
+  .geo-ring .dot-ring {
+    stroke: rgba(201,168,76,0.2);
+    stroke-dasharray: 4 10;
+    animation: spin 30s linear infinite;
+    transform-origin: center;
+  }
+  .geo-ring .dot-ring-2 {
+    stroke: rgba(26,140,126,0.15);
+    stroke-dasharray: 2 14;
+    animation: spin 20s linear infinite reverse;
+    transform-origin: center;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5.5vw, 5.2rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 540px;
+    margin-bottom: 52px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 16px 36px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold-light);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+    z-index: -1;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.25); }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 16px 36px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 60px;
+    right: 60px;
+    display: flex;
+    gap: 48px;
+  }
+  .stat {
+    text-align: right;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--gold); font-size: 1.4rem; }
+  .stat-label {
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* SECTION COMMON */
+  section { position: relative; z-index: 1; }
+
+  .section-header {
+    margin-bottom: 72px;
+  }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--teal-light);
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  h2 em { font-style: italic; color: var(--gold); }
+  .section-desc {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 500px;
+    margin-top: 20px;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    padding: 28px 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--surface);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .marquee-item::after {
+    content: '◆';
+    color: var(--gold);
+    font-size: 0.4rem;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ABOUT */
+  .about {
+    padding: 140px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    padding: 40px;
+    position: relative;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 40px;
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+  }
+  .about-card-inner {
+    position: relative;
+  }
+  .about-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .about-card p {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .about-card-accent {
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(26,140,126,0.08));
+    border-color: var(--border);
+    margin-top: 20px;
+  }
+  .values-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .value-chip {
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    text-align: center;
+  }
+
+  /* SERVICES */
+  .services {
+    padding: 120px 60px;
+    background: var(--deep);
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-subtle);
+    margin-top: 72px;
+  }
+  .service-card {
+    background: var(--deep);
+    padding: 52px 44px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover { background: var(--surface); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 28px;
+  }
+  .service-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 28px;
+    color: var(--teal-light);
+  }
+  .service-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .service-card p {
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 10px;
+  }
+  .service-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    margin-top: 32px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .service-card:hover .service-link { opacity: 1; transform: translateY(0); }
+
+  /* INDUSTRIES */
+  .industries {
+    padding: 120px 60px;
+  }
+  .industries-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--border-subtle);
+    margin-top: 72px;
+  }
+  .industry-item {
+    background: var(--navy);
+    padding: 40px 28px;
+    text-align: center;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .industry-item:hover { background: var(--surface); }
+  .industry-icon {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+  }
+  .industry-item h4 {
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+  .industry-item:hover h4 { color: var(--gold); }
+
+  /* UVP */
+  .uvp {
+    padding: 120px 60px;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .uvp::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+  }
+  .uvp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .uvp-points {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 52px;
+  }
+  .uvp-point {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .uvp-point:last-child { border-bottom: none; padding-bottom: 0; }
+  .uvp-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    opacity: 0.5;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+  .uvp-point h4 {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .uvp-point p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .uvp-statement {
+    background: linear-gradient(135deg, var(--navy), var(--deep));
+    border: 1px solid var(--border);
+    padding: 60px;
+    position: relative;
+  }
+  .uvp-statement::after {
+    content: '"';
+    position: absolute;
+    top: 20px; left: 30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem;
+    color: var(--gold);
+    opacity: 0.07;
+    line-height: 1;
+  }
+  .uvp-statement blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+  }
+  .uvp-statement cite {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-style: normal;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 28px;
+  }
+
+  /* PROCESS */
+  .process {
+    padding: 140px 60px;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 80px;
+    position: relative;
+  }
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 12%;
+    right: 12%;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), var(--gold), var(--border));
+  }
+  .step {
+    padding: 0 32px;
+    text-align: center;
+    position: relative;
+  }
+  .step-circle {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 32px;
+    background: var(--navy);
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .step:hover .step-circle {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.05);
+  }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .step h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .step p {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* BLOG PREVIEW */
+  .insights {
+    padding: 120px 60px;
+    background: var(--deep);
+  }
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 72px;
+  }
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    transition: border-color 0.3s;
+    cursor: default;
+  }
+  .insight-card:hover { border-color: var(--border); }
+  .insight-card.featured { grid-row: span 2; }
+  .insight-visual {
+    height: 220px;
+    background: linear-gradient(135deg, var(--navy), var(--deep));
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .insight-card.featured .insight-visual { height: 280px; }
+  .insight-visual-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(201,168,76,0.08);
+    user-select: none;
+  }
+  .insight-category {
+    position: absolute;
+    bottom: 16px; left: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    background: rgba(13,21,38,0.9);
+    padding: 5px 10px;
+  }
+  .insight-body {
+    padding: 32px;
+  }
+  .insight-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .insight-card.featured .insight-body h3 { font-size: 1.4rem; }
+  .insight-body p {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .insight-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* CONTACT / CTA */
+  .contact {
+    padding: 140px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 50% 80% at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 50% at 80% 20%, rgba(26,140,126,0.05) 0%, transparent 60%);
+  }
+  .contact-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contact h2 {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    margin-bottom: 24px;
+  }
+  .contact-sub {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 52px;
+  }
+  .contact-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    text-align: left;
+    margin-bottom: 16px;
+  }
+  .contact-form .full { grid-column: span 2; }
+  input, textarea, select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.6; }
+  input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+  textarea { height: 120px; resize: none; }
+  select option { background: var(--deep); }
+  .submit-btn {
+    width: 100%;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    padding: 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .submit-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid var(--border-subtle);
+    padding: 80px 60px 40px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  .footer-brand p {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin: 20px 0;
+    max-width: 280px;
+  }
+  .footer-tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+  .footer-col h4 {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .footer-col a {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 32px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    opacity: 0.5;
+  }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .fade-up:nth-child(3) { transition-delay: 0.2s; }
+  .fade-up:nth-child(4) { transition-delay: 0.3s; }
+  .fade-up:nth-child(5) { transition-delay: 0.4s; }
+  .fade-up:nth-child(6) { transition-delay: 0.5s; }
+
+  /* Divider */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto;
+    opacity: 0.4;
+  }
+
+  @media (max-width: 1024px) {
+    nav { padding: 20px 30px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 30px 140px; }
+    .hero-stats { right: 30px; gap: 24px; }
+    .about, .uvp-grid { grid-template-columns: 1fr; gap: 60px; padding: 80px 30px; }
+    .services, .industries, .process, .insights, .contact { padding: 80px 30px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .industries-grid { grid-template-columns: repeat(3, 1fr); }
+    .process-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .process-steps::before { display: none; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .contact-form { grid-template-columns: 1fr; }
+    .contact-form .full { grid-column: 1; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .geo-ring { width: 400px; height: 400px; right: -150px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="logo">Olushad <span>Global</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#insights">Insights</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Book Consultation</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  
+  <svg class="geo-ring" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="350" cy="350" r="320" stroke-width="1"/>
+    <circle cx="350" cy="350" r="260" stroke-width="1" class="inner"/>
+    <circle cx="350" cy="350" r="200" stroke-width="0.5"/>
+    <circle cx="350" cy="350" r="140" stroke-width="0.5" class="inner"/>
+    <circle cx="350" cy="350" r="320" stroke-width="1" class="dot-ring"/>
+    <circle cx="350" cy="350" r="200" stroke-width="1" class="dot-ring-2"/>
+    <!-- Crosshair lines -->
+    <line x1="350" y1="20" x2="350" y2="680" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>
+    <line x1="20" y1="350" x2="680" y2="350" stroke="rgba(201,168,76,0.05)" stroke-width="1"/>
+    <!-- Data points -->
+    <circle cx="350" cy="30" r="3" fill="rgba(201,168,76,0.4)"/>
+    <circle cx="350" cy="670" r="3" fill="rgba(201,168,76,0.4)"/>
+    <circle cx="30" cy="350" r="3" fill="rgba(201,168,76,0.4)"/>
+    <circle cx="670" cy="350" r="3" fill="rgba(201,168,76,0.4)"/>
+    <circle cx="576" cy="124" r="3" fill="rgba(26,140,126,0.6)"/>
+    <circle cx="124" cy="576" r="3" fill="rgba(26,140,126,0.6)"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag">Software R&D · Business Intelligence · SaaS Innovation</div>
+    <h1>Research-Driven<br><em>Software Innovation</em><br>for Growth Businesses</h1>
+    <p class="hero-sub">We help businesses design, analyze, and scale digital products with strategic intelligence and cutting-edge technology.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Book a Consultation</a>
+      <a href="#services" class="btn-outline">Explore Services</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">6<span>+</span></div>
+      <div class="stat-label">Core Services</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Industries</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Research-First</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Software Research & Development</div>
+    <div class="marquee-item">Business Intelligence</div>
+    <div class="marquee-item">SaaS Product Design</div>
+    <div class="marquee-item">Competitor Analysis</div>
+    <div class="marquee-item">Market Research</div>
+    <div class="marquee-item">Product Reviews</div>
+    <div class="marquee-item">Digital Transformation</div>
+    <div class="marquee-item">MVP Development</div>
+    <div class="marquee-item">Technical Architecture</div>
+    <div class="marquee-item">Strategic Intelligence</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="marquee-item">Software Research & Development</div>
+    <div class="marquee-item">Business Intelligence</div>
+    <div class="marquee-item">SaaS Product Design</div>
+    <div class="marquee-item">Competitor Analysis</div>
+    <div class="marquee-item">Market Research</div>
+    <div class="marquee-item">Product Reviews</div>
+    <div class="marquee-item">Digital Transformation</div>
+    <div class="marquee-item">MVP Development</div>
+    <div class="marquee-item">Technical Architecture</div>
+    <div class="marquee-item">Strategic Intelligence</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <div class="section-header">
+      <div class="section-tag">About Us</div>
+      <h2>Bridging <em>Innovation</em><br>& Strategy</h2>
+      <p class="section-desc">Olushad Global Consulting is a forward-thinking digital agency that bridges the gap between technical innovation and business strategy.</p>
+    </div>
+    <div class="uvp-points" style="margin-top:0">
+      <div class="uvp-point fade-up">
+        <div class="uvp-num">01</div>
+        <div>
+          <h4>Mission</h4>
+          <p>To empower businesses with research-driven software solutions and strategic intelligence that enable sustainable growth and competitive advantage.</p>
+        </div>
+      </div>
+      <div class="uvp-point fade-up">
+        <div class="uvp-num">02</div>
+        <div>
+          <h4>Vision</h4>
+          <p>To become a globally recognized leader in research-backed digital product innovation and business intelligence solutions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="about-visual">
+    <div class="about-card fade-up">
+      <div class="about-card-inner">
+        <h3>Our Core Values</h3>
+        <p>Every engagement is anchored in values that drive lasting impact.</p>
+        <div class="values-grid">
+          <div class="value-chip">Innovation</div>
+          <div class="value-chip">Integrity</div>
+          <div class="value-chip">Precision</div>
+          <div class="value-chip">Excellence</div>
+          <div class="value-chip" style="grid-column: span 2">Strategic Thinking</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-card about-card-accent fade-up" style="margin-top:20px">
+      <p style="font-family:'Playfair Display',serif; font-style:italic; font-size:1.05rem; line-height:1.7; color:var(--text);">"Intelligence Meets Innovation — where data drives every digital decision we make."</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header">
+    <div class="section-tag">What We Do</div>
+    <h2>Our <em>Services</em></h2>
+    <p class="section-desc">End-to-end capabilities spanning research, strategy, and execution across the digital product lifecycle.</p>
+  </div>
+
+  <div class="services-grid">
+    <!-- 1 -->
+    <div class="service-card fade-up">
+      <div class="service-num">01</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="6" width="14" height="14" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="24" y="6" width="14" height="14" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="6" y="24" width="14" height="14" stroke="currentColor" stroke-width="1.2"/>
+        <circle cx="31" cy="31" r="7" stroke="currentColor" stroke-width="1.2"/>
+        <line x1="36" y1="36" x2="40" y2="40" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <h3>Software Research & Development</h3>
+      <p>In-depth technical research to validate, architect, and develop scalable software solutions — from feasibility to deployment.</p>
+      <div class="service-tags">
+        <span class="tag">Feasibility Studies</span>
+        <span class="tag">MVP Dev</span>
+        <span class="tag">Architecture</span>
+        <span class="tag">Custom Software</span>
+      </div>
+      <a href="#contact" class="service-link">Start a Project →</a>
+    </div>
+
+    <!-- 2 -->
+    <div class="service-card fade-up">
+      <div class="service-num">02</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="16" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M22 10 L22 22 L30 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="22" cy="22" r="2" fill="currentColor"/>
+      </svg>
+      <h3>Product Review & Evaluation</h3>
+      <p>Professional analytical reviews for digital products and SaaS platforms, from UX performance to market fit evaluation.</p>
+      <div class="service-tags">
+        <span class="tag">SaaS Reviews</span>
+        <span class="tag">UX Audit</span>
+        <span class="tag">Tech Audit</span>
+        <span class="tag">Market Fit</span>
+      </div>
+      <a href="#contact" class="service-link">Request Review →</a>
+    </div>
+
+    <!-- 3 -->
+    <div class="service-card fade-up">
+      <div class="service-num">03</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 36 L8 20 L16 26 L24 14 L32 20 L38 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="38" cy="8" r="2.5" fill="currentColor"/>
+      </svg>
+      <h3>Business Analysis & Strategy</h3>
+      <p>Translating business challenges into actionable digital strategies — clear roadmaps and strategic documentation for implementation.</p>
+      <div class="service-tags">
+        <span class="tag">Requirements</span>
+        <span class="tag">Process Analysis</span>
+        <span class="tag">Risk Assessment</span>
+      </div>
+      <a href="#contact" class="service-link">Get Strategy →</a>
+    </div>
+
+    <!-- 4 -->
+    <div class="service-card fade-up">
+      <div class="service-num">04</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="14" stroke="currentColor" stroke-width="1.2"/>
+        <ellipse cx="22" cy="22" rx="6" ry="14" stroke="currentColor" stroke-width="1.2"/>
+        <line x1="8" y1="22" x2="36" y2="22" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+      <h3>Market Research & Intelligence</h3>
+      <p>Data-backed insights to support informed business decisions — from industry trends to investment feasibility reports.</p>
+      <div class="service-tags">
+        <span class="tag">Trend Analysis</span>
+        <span class="tag">SWOT</span>
+        <span class="tag">TAM/SAM/SOM</span>
+      </div>
+      <a href="#contact" class="service-link">Get Insights →</a>
+    </div>
+
+    <!-- 5 -->
+    <div class="service-card fade-up">
+      <div class="service-num">05</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="14" width="12" height="20" stroke="currentColor" stroke-width="1.2"/>
+        <rect x="26" y="14" width="12" height="20" stroke="currentColor" stroke-width="1.2"/>
+        <line x1="18" y1="24" x2="26" y2="24" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 2"/>
+        <path d="M16 10 L22 6 L28 10" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+      <h3>Competitor Analysis</h3>
+      <p>Deep competitive intelligence to help clients outperform rivals — from feature comparison matrices to positioning strategy review.</p>
+      <div class="service-tags">
+        <span class="tag">Product Breakdown</span>
+        <span class="tag">Pricing Analysis</span>
+        <span class="tag">Gap Analysis</span>
+      </div>
+      <a href="#contact" class="service-link">Analyze Now →</a>
+    </div>
+
+    <!-- 6 -->
+    <div class="service-card fade-up">
+      <div class="service-num">06</div>
+      <svg class="service-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="10" width="32" height="24" rx="1" stroke="currentColor" stroke-width="1.2"/>
+        <line x1="6" y1="18" x2="38" y2="18" stroke="currentColor" stroke-width="1"/>
+        <rect x="12" y="22" width="6" height="8" stroke="currentColor" stroke-width="1"/>
+        <rect x="22" y="22" width="10" height="4" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <h3>SaaS Product Design & Development</h3>
+      <p>End-to-end SaaS design and development from idea to launch — discovery, design, full-stack development, and deployment.</p>
+      <div class="service-tags">
+        <span class="tag">UI/UX Design</span>
+        <span class="tag">Full-Stack Dev</span>
+        <span class="tag">Cloud Deploy</span>
+      </div>
+      <a href="#contact" class="service-link">Build Your SaaS →</a>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries" id="industries">
+  <div class="section-header" style="text-align:center; max-width:600px; margin:0 auto 72px;">
+    <div class="section-tag" style="justify-content:center; text-align:center;">Industries We Serve</div>
+    <h2>Built for Every <em>Frontier</em></h2>
+    <p class="section-desc" style="margin:0 auto">Delivering strategic intelligence and digital solutions across the most dynamic sectors driving the future.</p>
+  </div>
+  <div class="industries-grid">
+    <div class="industry-item fade-up">
+      <div class="industry-icon">🏦</div>
+      <h4>FinTech</h4>
+    </div>
+    <div class="industry-item fade-up">
+      <div class="industry-icon">🏥</div>
+      <h4>HealthTech</h4>
+    </div>
+    <div class="industry-item fade-up">
+      <div class="industry-icon">🎓</div>
+      <h4>EdTech</h4>
+    </div>
+    <div class="industry-item fade-up">
+      <div class="industry-icon">🛒</div>
+      <h4>E-Commerce</h4>
+    </div>
+    <div class="industry-item fade-up">
+      <div class="industry-icon">☁️</div>
+      <h4>Enterprise SaaS</h4>
+    </div>
+    <div class="industry-item fade-up">
+      <div class="industry-icon">🤖</div>
+      <h4>AI & Automation</h4>
+    </div>
+  </div>
+</section>
+
+<!-- UVP -->
+<section class="uvp" id="approach">
+  <div class="uvp-grid">
+    <div>
+      <div class="section-tag">Why Choose Us</div>
+      <h2>The Olushad<br><em>Difference</em></h2>
+      <div class="uvp-points">
+        <div class="uvp-point fade-up">
+          <div class="uvp-num">01</div>
+          <div>
+            <h4>Research-First Approach</h4>
+            <p>Every engagement begins with rigorous research — no assumptions, only validated insights.</p>
+          </div>
+        </div>
+        <div class="uvp-point fade-up">
+          <div class="uvp-num">02</div>
+          <div>
+            <h4>Business + Technology Integration</h4>
+            <p>We don't just build software — we align every technical decision with your business objectives.</p>
+          </div>
+        </div>
+        <div class="uvp-point fade-up">
+          <div class="uvp-num">03</div>
+          <div>
+            <h4>End-to-End SaaS Expertise</h4>
+            <p>From concept to cloud deployment — we own the full digital product lifecycle.</p>
+          </div>
+        </div>
+        <div class="uvp-point fade-up">
+          <div class="uvp-num">04</div>
+          <div>
+            <h4>Strategic Competitor Intelligence</h4>
+            <p>Proprietary frameworks for competitive analysis that reveal gaps your rivals haven't spotted.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="uvp-statement fade-up">
+        <blockquote>"Research-Driven Innovation. Strategic Execution. Scalable Technology."</blockquote>
+        <cite>— Olushad Global Consulting</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="section-header" style="text-align:center; max-width:600px; margin:0 auto;">
+    <div class="section-tag" style="justify-content:center">How We Work</div>
+    <h2>Our <em>Process</em></h2>
+    <p class="section-desc" style="margin:16px auto 0">A disciplined, research-anchored methodology from first brief to final delivery.</p>
+  </div>
+  <div class="process-steps">
+    <div class="step fade-up">
+      <div class="step-circle"><div class="step-num">01</div></div>
+      <h4>Discovery</h4>
+      <p>Deep-dive into your business goals, market context, and technical landscape to define the right problem.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-circle"><div class="step-num">02</div></div>
+      <h4>Research & Analysis</h4>
+      <p>Rigorous market, competitor, and technical research to surface insights that shape your strategy.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-circle"><div class="step-num">03</div></div>
+      <h4>Strategy & Design</h4>
+      <p>Clear roadmaps, architecture blueprints, and UX/UI design aligned to your vision and validated data.</p>
+    </div>
+    <div class="step fade-up">
+      <div class="step-circle"><div class="step-num">04</div></div>
+      <h4>Build & Launch</h4>
+      <p>Production-grade development, rigorous testing, cloud deployment, and ongoing optimization.</p>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section class="insights" id="insights">
+  <div class="section-header">
+    <div class="section-tag">Insights & Research</div>
+    <h2>From the <em>Intelligence</em> Desk</h2>
+    <p class="section-desc">Thought leadership on SaaS, market research, and digital transformation trends.</p>
+  </div>
+  <div class="insights-grid">
+    <div class="insight-card featured fade-up">
+      <div class="insight-visual">
+        <div class="insight-visual-text">SaaS</div>
+        <span class="insight-category">SaaS Trends</span>
+      </div>
+      <div class="insight-body">
+        <h3>The 2025 SaaS Market Intelligence Report: Key Growth Signals for Founders</h3>
+        <p>An in-depth analysis of emerging SaaS verticals, pricing model shifts, and the competitive dynamics shaping the next wave of B2B software.</p>
+        <div class="insight-meta">Research Report · 12 min read</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up">
+      <div class="insight-visual" style="height:160px">
+        <div class="insight-visual-text" style="font-size:3rem">AI</div>
+        <span class="insight-category">AI & Automation</span>
+      </div>
+      <div class="insight-body">
+        <h3>How AI is Reshaping Competitor Intelligence Frameworks</h3>
+        <p>Practical frameworks for integrating AI into your competitive monitoring stack.</p>
+        <div class="insight-meta">Analysis · 7 min read</div>
+      </div>
+    </div>
+    <div class="insight-card fade-up">
+      <div class="insight-visual" style="height:160px">
+        <div class="insight-visual-text" style="font-size:3rem">MVP</div>
+        <span class="insight-category">Product Research</span>
+      </div>
+      <div class="insight-body">
+        <h3>Research-First MVP Development: Avoid the 5 Costliest Mistakes</h3>
+        <p>Why 70% of MVP failures trace back to skipped research phases — and how to fix them.</p>
+        <div class="insight-meta">Guide · 9 min read</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-tag" style="justify-content:center">Let's Work Together</div>
+    <h2>Ready to Build<br><em>Something Exceptional?</em></h2>
+    <p class="contact-sub">Book a consultation or request a proposal. Our team will respond within 24 hours.</p>
+
+    <div class="contact-form">
+      <input type="text" placeholder="Full Name" class="fade-up">
+      <input type="email" placeholder="Email Address" class="fade-up">
+      <input type="text" placeholder="Company / Organization" class="fade-up">
+      <select class="fade-up">
+        <option value="" disabled selected>Service of Interest</option>
+        <option>Software R&D</option>
+        <option>Product Review & Evaluation</option>
+        <option>Business Analysis & Strategy</option>
+        <option>Market Research</option>
+        <option>Competitor Analysis</option>
+        <option>SaaS Design & Development</option>
+      </select>
+      <textarea placeholder="Tell us about your project or challenge..." class="full fade-up"></textarea>
+    </div>
+    <button class="submit-btn fade-up">Submit Inquiry →</button>
+
+    <div style="margin-top: 52px; display:flex; justify-content:center; gap:48px; flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">Email</div>
+        <div style="font-size:0.9rem; color:var(--muted)">hello@olushadglobal.com</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">Response Time</div>
+        <div style="font-size:0.9rem; color:var(--muted)">Within 24 hours</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">Consultation</div>
+        <div style="font-size:0.9rem; color:var(--muted)">First session complimentary</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo" style="font-size:1.2rem">Olushad <span style="color:var(--gold)">Global</span></div>
+      <p>Research-driven digital consultancy helping businesses design, analyze, and develop scalable SaaS products and software solutions.</p>
+      <div class="footer-tagline">Intelligence Meets Innovation</div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Software R&D</a></li>
+        <li><a href="#services">Product Reviews</a></li>
+        <li><a href="#services">Business Analysis</a></li>
+        <li><a href="#services">Market Research</a></li>
+        <li><a href="#services">Competitor Analysis</a></li>
+        <li><a href="#services">SaaS Development</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#approach">Our Approach</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#insights">Insights</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">Research Blog</a></li>
+        <li><a href="#contact">Book a Call</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Olushad Global Consulting. All rights reserved.</div>
+    <div class="footer-copy">Privacy Policy · Terms of Service</div>
+  </div>
+</footer>
+
+<script>
+  // Custom Cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.transform = `translate(${mouseX - 6}px, ${mouseY - 6}px)`;
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    cursorRing.style.transform = `translate(${ringX - 18}px, ${ringY - 18}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Nav scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Intersection Observer for fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Hero elements animate in on load
+  setTimeout(() => {
+    document.querySelector('.hero-tag').classList.add('visible');
+    document.querySelector('.hero h1').style.opacity = 1;
+    document.querySelector('.hero h1').style.transform = 'none';
+  }, 100);
+
+  // Counter animation
+  function animateCounter(el, target, suffix = '') {
+    let current = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      el.textContent = Math.floor(current) + suffix;
+    }, 16);
+  }
+</script>
+</body>
+</html>
